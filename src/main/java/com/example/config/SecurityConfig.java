@@ -52,7 +52,7 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll().requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .requestMatchers("/auth/**").permitAll().requestMatchers(HttpMethod.POST, "/api/users").permitAll().requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(
@@ -68,3 +68,4 @@ public class SecurityConfig {
 //        return new BCryptPasswordEncoder();
 //    }
 }
+
