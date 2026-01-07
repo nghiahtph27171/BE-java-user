@@ -33,12 +33,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Tìm user trong Database
         // Lưu ý: Nếu UserRepository trả về Optional<User> thì dùng .orElseThrow sẽ gọn hơn
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-
+       User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         // 2. Chuyển Role (Enum) thành String và thêm tiền tố ROLE_ (nếu cần thiết cho logic bảo mật)
         // Lưu ý: SimpleGrantedAuthority cần String, nên phải dùng .name()
         String roleName = user.getRole().name(); 
