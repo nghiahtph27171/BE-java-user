@@ -19,11 +19,9 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-    // 1. Bỏ @Autowired ở đây vì đã dùng Constructor Injection
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // Constructor Injection (Spring tự động hiểu và tiêm bean vào đây)
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -32,14 +30,10 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Tìm user trong Database
-        // Lưu ý: Nếu UserRepository trả về Optional<User> thì dùng .orElseThrow sẽ gọn hơn
        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-        // 2. Chuyển Role (Enum) thành String và thêm tiền tố ROLE_ (nếu cần thiết cho logic bảo mật)
-        // Lưu ý: SimpleGrantedAuthority cần String, nên phải dùng .name()
         String roleName = user.getRole().name(); 
         
-        // Trả về đối tượng UserDetails (chuẩn của Spring Security)
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
@@ -75,6 +69,7 @@ public class UserService implements UserDetailsService {
                         u.getUsername(),
                         u.getEmail()
                 ))
-                .toList(); // Chỉ chạy được trên Java 16+ (Server bạn là Java 17 nên OK)
+                .toList();
     }
 }
+
