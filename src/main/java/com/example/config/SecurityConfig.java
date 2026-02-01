@@ -31,14 +31,11 @@ public class SecurityConfig {
     private UserService userService; 
 
    @Bean
-    // 1. Thêm tham số PasswordEncoder vào đây (Spring sẽ tự lấy từ ApplicationConfig nạp vào)
     public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        // Gán UserDetailsService
         authProvider.setUserDetailsService(userService);
 
-        // 2. SỬA DÒNG NÀY: Dùng biến 'passwordEncoder' (tham số) thay vì gọi hàm 'passwordEncoder()'
         authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
@@ -68,4 +65,5 @@ public class SecurityConfig {
 //        return new BCryptPasswordEncoder();
 //    }
 }
+
 
