@@ -8,7 +8,6 @@ public class UserRequest {
 public UserRequest() {
     }
 
-    // 2. Thêm Constructor có tham số (để sau này code Java dễ dùng hơn)
     public UserRequest(String username, String password, String email) {
         this.username = username;
         this.password = password;
@@ -38,4 +37,5 @@ public UserRequest() {
         this.email = email;
     }
 }
+
 
