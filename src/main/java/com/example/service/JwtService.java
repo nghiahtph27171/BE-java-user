@@ -14,20 +14,16 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    // 1. Dùng KEY CỐ ĐỊNH (Hardcode hoặc lấy từ properties).
-    // Chuỗi này là Base64 của một key 256-bit an toàn. Đừng dùng chuỗi ngắn như "123456".
     private static final String SECRET_KEY = 
         "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 giờ
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60;
 
-    // 2. Tạo Key object từ chuỗi cố định trên
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // ====== GENERATE TOKEN ======
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
@@ -38,9 +34,7 @@ public class JwtService {
                 .compact();
     }
 
-    // ====== EXTRACT DATA ======
     
-    // Trích xuất tất cả Claims (Payload)
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey()) // Dùng cùng 1 key để giải mã
@@ -59,7 +53,6 @@ public class JwtService {
         return extractAllClaims(token).get("role", String.class);
     }
 
-    // Helper method để lấy 1 claim cụ thể
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -68,13 +61,12 @@ public class JwtService {
     // ====== VALIDATE TOKEN ======
     public boolean isTokenValid(String token) {
         try {
-            // Nếu parse được và không ném lỗi SignatureException thì là hợp lệ
             extractAllClaims(token);
             return true;
         } catch (Exception e) {
-            // Log lỗi ra console để debug nếu cần
             // System.err.println("Token error: " + e.getMessage());
             return false;
         }
     }
+
 }
